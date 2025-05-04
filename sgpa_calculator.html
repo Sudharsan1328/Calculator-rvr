@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>RVR SGPA Calculator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin: 30px;
+      background-color: #f4f4f4;
+    }
+    h1 {
+      color: #2e7d32;
+    }
+    input, select, button {
+      padding: 10px;
+      margin: 5px;
+      font-size: 16px;
+    }
+    .result {
+      margin-top: 20px;
+      font-size: 20px;
+      font-weight: bold;
+    }
+    footer {
+      margin-top: 40px;
+      font-style: italic;
+    }
+  </style>
+</head>
+<body>
+  <h1>RVR SGPA Calculator</h1>
+  <form id="sgpaForm">
+    <div>
+      <h3>Subjects (5)</h3>
+      <div id="subjects">
+        <!-- Subject inputs will be added here -->
+      </div>
+    </div>
+    <div>
+      <h3>Labs (3 x 1.5 credits + 1 x 2 credits)</h3>
+      <div id="labs">
+        <!-- Lab inputs will be added here -->
+      </div>
+    </div>
+    <button type="button" onclick="calculateSGPA()">Calculate SGPA</button>
+  </form>
+  <div class="result" id="result"></div>
+  <footer>Designed by a Chemical Engineering student</footer>
+
+  <script>
+    const grades = ["A+", "A", "B", "C", "D", "E", "F"];
+    const gradePoints = { "A+": 10, "A": 9, "B": 8, "C": 7, "D": 6, "E": 5, "F": 0 };
+
+    const subjectsDiv = document.getElementById("subjects");
+    for (let i = 1; i <= 5; i++) {
+      subjectsDiv.innerHTML += `
+        Subject ${i}: 
+        <select name="subject${i}">
+          ${grades.map(g => `<option value="${g}">${g}</option>`).join("")}
+        </select><br/>
+      `;
+    }
+
+    const labsDiv = document.getElementById("labs");
+    for (let i = 1; i <= 3; i++) {
+      labsDiv.innerHTML += `
+        Lab ${i} (1.5 credits): 
+        <select name="lab${i}">
+          ${grades.map(g => `<option value="${g}">${g}</option>`).join("")}
+        </select><br/>
+      `;
+    }
+
+    labsDiv.innerHTML += `
+      Lab 4 (2 credits): 
+      <select name="lab4">
+        ${grades.map(g => `<option value="${g}">${g}</option>`).join("")}
+      </select><br/>
+    `;
+
+    function calculateSGPA() {
+      let totalPoints = 0;
+      let totalCredits = 0;
+
+      for (let i = 1; i <= 5; i++) {
+        let grade = document.querySelector(`[name=subject${i}]`).value;
+        totalPoints += gradePoints[grade] * 3;
+        totalCredits += 3;
+      }
+
+      for (let i = 1; i <= 3; i++) {
+        let grade = document.querySelector(`[name=lab${i}]`).value;
+        totalPoints += gradePoints[grade] * 1.5;
+        totalCredits += 1.5;
+      }
+
+      let grade = document.querySelector(`[name=lab4]`).value;
+      totalPoints += gradePoints[grade] * 2;
+      totalCredits += 2;
+
+      const sgpa = totalPoints / totalCredits;
+      document.getElementById("result").innerText = `Your SGPA is: ${sgpa.toFixed(2)}`;
+    }
+  </script>
+</body>
+</html>
